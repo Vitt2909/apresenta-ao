@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Crash Simulator</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 1rem;
+}
+body.dark {
+  background: #222;
+  color: #f5f5f5;
+}
+</style>
+</head>
+<body>
+<button id="toggle-dark">Alternar Tema</button>
+<label>
+<input type="checkbox" id="sound-enabled" checked> Som
+</label>
+<select id="playback-speed">
+  <option value="1">1x</option>
+  <option value="1.5">1.5x</option>
+  <option value="2">2x</option>
+</select>
+<script>
+// ===================================
+//      CONFIGURAÇÕES E ESTADO GLOBAL
+// ===================================
+let darkMode = false;
+let soundEnabled = true;
+let playbackSpeed = 1;
+
+// ===================================
+//      FUNÇÕES DE SALVAMENTO
+// ===================================
+function saveSettings() {
+    const settings = { darkMode, soundEnabled, playbackSpeed };
+    try {
+        localStorage.setItem('simulatorSettings', JSON.stringify(settings));
+    } catch (error) {
+        console.warn('Não foi possível salvar configurações:', error);
+    }
+}
+
+function loadSettings() {
+    try {
+        const data = localStorage.getItem('simulatorSettings');
+        if (data) {
+            const settings = JSON.parse(data);
+            darkMode = typeof settings.darkMode === 'boolean' ? settings.darkMode : darkMode;
+            soundEnabled = typeof settings.soundEnabled === 'boolean' ? settings.soundEnabled : soundEnabled;
+            playbackSpeed = typeof settings.playbackSpeed === 'number' ? settings.playbackSpeed : playbackSpeed;
+        }
+    } catch (error) {
+        console.warn('Não foi possível carregar configurações:', error);
+    }
+}
+
+// ===================================
+//      INICIALIZAÇÃO E EVENTOS
+// ===================================
+document.addEventListener('DOMContentLoaded', () => {
+    loadSettings();
+    applySettings();
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    document.getElementById('toggle-dark').addEventListener('click', () => {
+        darkMode = !darkMode;
+        applySettings();
+        saveSettings();
+    });
+    document.getElementById('sound-enabled').addEventListener('change', e => {
+        soundEnabled = e.target.checked;
+        saveSettings();
+    });
+    document.getElementById('playback-speed').addEventListener('change', e => {
+        playbackSpeed = parseFloat(e.target.value);
+        saveSettings();
+    });
+}
+
+// ===================================
+//      APLICAÇÃO DAS CONFIGURAÇÕES
+// ===================================
+function applySettings() {
+    document.body.classList.toggle('dark', darkMode);
+    document.getElementById('sound-enabled').checked = soundEnabled;
+    document.getElementById('playback-speed').value = playbackSpeed;
+}
+</script>
+</body>
+</html>

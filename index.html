@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Apresentação</title>
+ <style>
+ html, body {
+   overflow: hidden; /* impede criação de barras de rolagem */
+   margin: 0;
+   font-family: sans-serif;
+ }
+ .slide {
+   width: 100vw;
+   height: 100vh;
+   display: none;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   overflow: hidden; /* evita vazamento interno */
+ }
+ .slide.active {
+   display: flex;
+ }
+ .slide-title {
+   color: #228B22;
+   font-size: 2rem;
+ }
+ </style>
+</head>
+<body>
+<div class="slide active">
+   <h2 class="slide-title">Mapa Conceitual</h2>
+</div>
+<div class="slide">
+   <h2 class="slide-title">Outro Slide</h2>
+</div>
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = document.querySelectorAll('.slide').length; // conta automaticamente
+
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === index);
+  });
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % totalSlides;
+  showSlide(currentSlide);
+}
+
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  showSlide(currentSlide);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+showSlide(currentSlide);
+</script>
+</body>
+</html>
